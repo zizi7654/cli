@@ -30,15 +30,6 @@ type ConfirmOpts struct {
 
 type Validator func(string) error
 
-type Prompter interface {
-	Select(SelectOpts) (string, error)
-	MultiSelect(SelectOpts) (string, error)
-	Input(PromptOpts) (string, error)
-	Password(PromptOpts) (string, error)
-	Confirm(ConfirmOpts) (bool, error)
-	// TODO single Editor based on GhEditor
-}
-
 func NewPrompter(stdout, stderr io.Writer) Prompter {
 	return &surveyPrompter{
 		stdout: stdout,
@@ -60,6 +51,8 @@ func toAskOpts(vs []Validator) []survey.AskOpt {
 	}
 	return ao
 }
+
+// TODO figure out how to make Survey respect stdout/stderr writers that we set
 
 func (p *surveyPrompter) Select(opts SelectOpts) (string, error) {
 	q := &survey.Select{

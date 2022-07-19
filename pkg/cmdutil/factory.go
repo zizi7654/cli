@@ -17,9 +17,19 @@ type Browser interface {
 	Browse(string) error
 }
 
+type Prompter interface {
+	Select(SelectOpts) (string, error)
+	MultiSelect(SelectOpts) (string, error)
+	Input(PromptOpts) (string, error)
+	Password(PromptOpts) (string, error)
+	Confirm(ConfirmOpts) (bool, error)
+	// TODO single Editor based on GhEditor
+}
+
 type Factory struct {
 	IOStreams *iostreams.IOStreams
 	Browser   Browser
+	Prompter  Prompter
 
 	HttpClient func() (*http.Client, error)
 	BaseRepo   func() (ghrepo.Interface, error)
