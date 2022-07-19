@@ -18,8 +18,8 @@ type Browser interface {
 }
 
 type Prompter interface {
-	Select(SelectOpts) (string, error)
-	MultiSelect(SelectOpts) (string, error)
+	Select(SelectOpts) (int, error)
+	MultiSelect(SelectOpts) (int, error)
 	Input(PromptOpts) (string, error)
 	Password(PromptOpts) (string, error)
 	Confirm(ConfirmOpts) (bool, error)

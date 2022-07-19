@@ -71,7 +71,7 @@ func wrapSurveyError(err error) error {
 	return fmt.Errorf("could not prompt: %w", err)
 }
 
-func (p *surveyPrompter) Select(opts SelectOpts) (result string, err error) {
+func (p *surveyPrompter) Select(opts SelectOpts) (result int, err error) {
 	q := &survey.Select{
 		Message:       opts.Message,
 		Default:       opts.Default,
@@ -92,7 +92,7 @@ func (p *surveyPrompter) Select(opts SelectOpts) (result string, err error) {
 	return
 }
 
-func (p *surveyPrompter) MultiSelect(opts SelectOpts) (result string, err error) {
+func (p *surveyPrompter) MultiSelect(opts SelectOpts) (result int, err error) {
 	q := &survey.MultiSelect{
 		Message:       opts.Message,
 		Default:       opts.Default,

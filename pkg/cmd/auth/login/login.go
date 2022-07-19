@@ -185,22 +185,19 @@ func loginRun(opts *LoginOptions) error {
 	})
 }
 
-const gitHubHostOpt = "GitHub.com"
-const enterpriseHostOpt = "GitHub Enterprise Server"
-
 func promptForHostname(opts *LoginOptions) (string, error) {
 	hostType, err := opts.Prompter.Select(cmdutil.SelectOpts{
 		Message: "What account do you want to log into?",
 		Options: []string{
-			gitHubHostOpt,
-			enterpriseHostOpt,
+			"GitHub.com",
+			"GitHub Enterprise Server",
 		},
 	})
 	if err != nil {
 		return "", err
 	}
 
-	isEnterprise := hostType == enterpriseHostOpt
+	isEnterprise := hostType == 1
 
 	hostname := ghinstance.Default()
 	if isEnterprise {
