@@ -9,9 +9,7 @@ import (
 	"github.com/cli/cli/v2/internal/ghinstance"
 	"github.com/cli/cli/v2/internal/ghrepo"
 	"github.com/cli/cli/v2/pkg/cmdutil"
-	"github.com/cli/cli/v2/pkg/prompt"
 
-	"github.com/AlecAivazis/survey/v2"
 	"github.com/cli/cli/v2/pkg/iostreams"
 	"github.com/spf13/cobra"
 )
@@ -19,6 +17,7 @@ import (
 type DeleteOptions struct {
 	HttpClient func() (*http.Client, error)
 	BaseRepo   func() (ghrepo.Interface, error)
+	Prompter   cmdutil.Prompter
 	IO         *iostreams.IOStreams
 	RepoArg    string
 	Confirmed  bool
@@ -29,6 +28,7 @@ func NewCmdDelete(f *cmdutil.Factory, runF func(*DeleteOptions) error) *cobra.Co
 		IO:         f.IOStreams,
 		HttpClient: f.HttpClient,
 		BaseRepo:   f.BaseRepo,
+		Prompter:   f.Prompter,
 	}
 
 	cmd := &cobra.Command{
@@ -91,19 +91,19 @@ func deleteRun(opts *DeleteOptions) error {
 	fullName := ghrepo.FullName(toDelete)
 
 	if !opts.Confirmed {
-		var valid string
-		err := prompt.SurveyAskOne(
-			&survey.Input{Message: fmt.Sprintf("Type %s to confirm deletion:", fullName)},
-			&valid,
-			survey.WithValidator(
-				func(val interface{}) error {
-					if str := val.(string); !strings.EqualFold(str, fullName) {
-						return fmt.Errorf("You entered %s", str)
+		_, err := opts.Prompter.Input(cmdutil.PromptOpts{
+			Message: fmt.Sprintf("Type %s to confirm deletion:", fullName),
+			Validators: []cmdutil.Validator{
+				func(val string) error {
+					if !strings.EqualFold(val, fullName) {
+						return fmt.Errorf("You entered %s", val)
 					}
 					return nil
-				}))
+				},
+			},
+		})
 		if err != nil {
-			return fmt.Errorf("could not prompt: %w", err)
+			return err
 		}
 	}
 
