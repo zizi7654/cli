@@ -110,7 +110,7 @@ func browser(f *cmdutil.Factory) cmdutil.Browser {
 
 func prompter(f *cmdutil.Factory) cmdutil.Prompter {
 	io := f.IOStreams
-	return cmdutil.NewPrompter(io.Out, io.ErrOut)
+	return cmdutil.NewPrompter(io.In, io.Out, io.ErrOut)
 }
 
 // Browser precedence
