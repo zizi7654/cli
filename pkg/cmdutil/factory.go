@@ -17,6 +17,10 @@ type Browser interface {
 	Browse(string) error
 }
 
+// TODO fix current breaking tests
+// TODO add Editor
+// TODO linter warning for using the prompt package
+
 //go:generate moq -rm -out prompter_mock.go . Prompter
 type Prompter interface {
 	Select(string, string, []string) (int, error)
