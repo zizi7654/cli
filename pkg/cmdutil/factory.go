@@ -17,6 +17,7 @@ type Browser interface {
 	Browse(string) error
 }
 
+//go:generate moq -rm -out prompter_mock.go . Prompter
 type Prompter interface {
 	Select(string, string, []string) (int, error)
 	MultiSelect(string, string, []string) (int, error)
