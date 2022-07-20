@@ -9,38 +9,6 @@ import (
 	"github.com/cli/cli/v2/internal/ghinstance"
 )
 
-// NB this could be embedded but having to write out a PromptOpts literal was highly tedious
-type PromptOpts struct {
-	Message    string
-	Validators []Validator
-	Help       string
-	Default    string
-}
-
-type SelectOpts struct {
-	Message    string
-	Validators []Validator
-	Help       string
-	Default    string
-
-	Options       []string
-	PageSize      int
-	VimMode       bool
-	FilterMessage string
-	Filter        func(filter string, value string, index int) bool
-	Description   func(value string, index int) string
-}
-
-type ConfirmOpts struct {
-	Message    string
-	Validators []Validator
-	Help       string
-
-	Default bool
-}
-
-type Validator func(string) error
-
 func NewPrompter(stdin io.Reader, stdout, stderr io.Writer) Prompter {
 	return &surveyPrompter{
 		stdin:  stdin.(terminal.FileReader),
@@ -55,60 +23,28 @@ type surveyPrompter struct {
 	stderr io.Writer
 }
 
-func toAskOpts(vs []Validator) []survey.AskOpt {
-	ao := []survey.AskOpt{}
-	for _, v := range vs {
-		ao = append(ao, survey.WithValidator(func(i interface{}) error {
-			return v(i.(string))
-		}))
-	}
-	return ao
-}
-
-func wrapSurveyError(err error) error {
-	if err == nil {
-		return nil
-	}
-	return fmt.Errorf("could not prompt: %w", err)
-}
-
-func (p *surveyPrompter) Select(opts SelectOpts) (result int, err error) {
+func (p *surveyPrompter) Select(message, defaultValue string, options []string) (result int, err error) {
 	q := &survey.Select{
-		Message:       opts.Message,
-		Default:       opts.Default,
-		Help:          opts.Help,
-		Options:       opts.Options,
-		PageSize:      opts.PageSize,
-		VimMode:       opts.VimMode,
-		FilterMessage: opts.FilterMessage,
-		Filter:        opts.Filter,
-		Description:   opts.Description,
+		Message:  message,
+		Default:  defaultValue,
+		Options:  options,
+		PageSize: 20,
 	}
 
-	ao := toAskOpts(opts.Validators)
-	ao = append(ao, survey.WithStdio(p.stdin, p.stdout, p.stderr))
-
-	err = wrapSurveyError(survey.AskOne(q, &result, ao...))
+	err = p.ask(q, &result)
 
 	return
 }
 
-func (p *surveyPrompter) MultiSelect(opts SelectOpts) (result int, err error) {
+func (p *surveyPrompter) MultiSelect(message, defaultValue string, options []string) (result int, err error) {
 	q := &survey.MultiSelect{
-		Message:       opts.Message,
-		Default:       opts.Default,
-		Help:          opts.Help,
-		Options:       opts.Options,
-		PageSize:      opts.PageSize,
-		VimMode:       opts.VimMode,
-		FilterMessage: opts.FilterMessage,
-		Filter:        opts.Filter,
+		Message:  message,
+		Default:  defaultValue,
+		Options:  options,
+		PageSize: 20,
 	}
 
-	ao := toAskOpts(opts.Validators)
-	ao = append(ao, survey.WithStdio(p.stdin, p.stdout, p.stderr))
-
-	err = wrapSurveyError(survey.AskOne(q, &result, ao...))
+	err = p.ask(q, &result)
 
 	return
 }
@@ -145,31 +81,23 @@ func (p *surveyPrompter) InputHostname() (result string, err error) {
 	return
 }
 
-func (p *surveyPrompter) Password(opts PromptOpts) (result string, err error) {
+func (p *surveyPrompter) Password(prompt string) (result string, err error) {
 	q := &survey.Password{
-		Message: opts.Message,
-		Help:    opts.Help,
+		Message: prompt,
 	}
 
-	ao := toAskOpts(opts.Validators)
-	ao = append(ao, survey.WithStdio(p.stdin, p.stdout, p.stderr))
-
-	err = wrapSurveyError(survey.AskOne(q, &result, ao...))
+	err = p.ask(q, &result)
 
 	return
 }
 
-func (p *surveyPrompter) Confirm(opts ConfirmOpts) (result bool, err error) {
+func (p *surveyPrompter) Confirm(prompt string, defaultValue bool) (result bool, err error) {
 	q := &survey.Confirm{
-		Message: opts.Message,
-		Help:    opts.Help,
-		Default: opts.Default,
+		Message: prompt,
+		Default: defaultValue,
 	}
 
-	ao := toAskOpts(opts.Validators)
-	ao = append(ao, survey.WithStdio(p.stdin, p.stdout, p.stderr))
-
-	err = wrapSurveyError(survey.AskOne(q, &result, ao...))
+	err = p.ask(q, &result)
 
 	return
 }

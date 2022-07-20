@@ -159,10 +159,7 @@ func loginRun(opts *LoginOptions) error {
 	existingToken, _ := cfg.AuthToken(hostname)
 	if existingToken != "" && opts.Interactive {
 		if err := shared.HasMinimumScopes(httpClient, hostname, existingToken); err == nil {
-			keepGoing, err := opts.Prompter.Confirm(cmdutil.ConfirmOpts{
-				Message: fmt.Sprintf("You're already logged into %s. Do you want to re-authenticate?", hostname),
-				Default: false,
-			})
+			keepGoing, err := opts.Prompter.Confirm(fmt.Sprintf("You're already logged into %s. Do you want to re-authenticate?", hostname), false)
 			if err != nil {
 				return err
 			}
@@ -186,13 +183,13 @@ func loginRun(opts *LoginOptions) error {
 }
 
 func promptForHostname(opts *LoginOptions) (string, error) {
-	hostType, err := opts.Prompter.Select(cmdutil.SelectOpts{
-		Message: "What account do you want to log into?",
-		Options: []string{
+	hostType, err := opts.Prompter.Select(
+		"What account do you want to log into?",
+		"",
+		[]string{
 			"GitHub.com",
 			"GitHub Enterprise Server",
-		},
-	})
+		})
 	if err != nil {
 		return "", err
 	}

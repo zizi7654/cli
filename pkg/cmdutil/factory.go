@@ -18,12 +18,12 @@ type Browser interface {
 }
 
 type Prompter interface {
-	Select(SelectOpts) (int, error)
-	MultiSelect(SelectOpts) (int, error)
+	Select(string, string, []string) (int, error)
+	MultiSelect(string, string, []string) (int, error)
 	Input(string, string) (string, error)
 	InputHostname() (string, error)
-	Password(PromptOpts) (string, error)
-	Confirm(ConfirmOpts) (bool, error)
+	Password(string) (string, error)
+	Confirm(string, bool) (bool, error)
 	// TODO single Editor based on GhEditor
 }
 
