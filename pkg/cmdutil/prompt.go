@@ -59,45 +59,38 @@ func (p *surveyPrompter) ask(q survey.Prompt, response interface{}, opts ...surv
 }
 
 func (p *surveyPrompter) Input(prompt, defaultValue string) (result string, err error) {
-	q := &survey.Input{
+	err = p.ask(&survey.Input{
 		Message: prompt,
 		Default: defaultValue,
-	}
-
-	err = p.ask(q, &result)
+	}, &result)
 
 	return
 }
 
 func (p *surveyPrompter) InputHostname() (result string, err error) {
-	q := &survey.Input{
-		Message: "GHE hostname:",
-	}
-
-	err = p.ask(q, &result, survey.WithValidator(func(v interface{}) error {
-		return ghinstance.HostnameValidator(v.(string))
-	}))
+	err = p.ask(
+		&survey.Input{
+			Message: "GHE hostname:",
+		}, &result, survey.WithValidator(func(v interface{}) error {
+			return ghinstance.HostnameValidator(v.(string))
+		}))
 
 	return
 }
 
 func (p *surveyPrompter) Password(prompt string) (result string, err error) {
-	q := &survey.Password{
+	err = p.ask(&survey.Password{
 		Message: prompt,
-	}
-
-	err = p.ask(q, &result)
+	}, &result)
 
 	return
 }
 
 func (p *surveyPrompter) Confirm(prompt string, defaultValue bool) (result bool, err error) {
-	q := &survey.Confirm{
+	p.ask(&survey.Confirm{
 		Message: prompt,
 		Default: defaultValue,
-	}
-
-	err = p.ask(q, &result)
+	}, &result)
 
 	return
 }
