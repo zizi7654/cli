@@ -20,7 +20,8 @@ type Browser interface {
 type Prompter interface {
 	Select(SelectOpts) (int, error)
 	MultiSelect(SelectOpts) (int, error)
-	Input(PromptOpts) (string, error)
+	Input(string, string) (string, error)
+	InputHostname() (string, error)
 	Password(PromptOpts) (string, error)
 	Confirm(ConfirmOpts) (bool, error)
 	// TODO single Editor based on GhEditor

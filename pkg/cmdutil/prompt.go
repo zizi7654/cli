@@ -6,6 +6,7 @@ import (
 
 	"github.com/AlecAivazis/survey/v2"
 	"github.com/AlecAivazis/survey/v2/terminal"
+	"github.com/cli/cli/v2/internal/ghinstance"
 )
 
 // NB this could be embedded but having to write out a PromptOpts literal was highly tedious
@@ -112,17 +113,34 @@ func (p *surveyPrompter) MultiSelect(opts SelectOpts) (result int, err error) {
 	return
 }
 
-func (p *surveyPrompter) Input(opts PromptOpts) (result string, err error) {
+func (p *surveyPrompter) ask(q survey.Prompt, response interface{}, opts ...survey.AskOpt) error {
+	opts = append(opts, survey.WithStdio(p.stdin, p.stdout, p.stderr))
+	err := survey.AskOne(q, response, opts...)
+	if err == nil {
+		return nil
+	}
+	return fmt.Errorf("could not prompt: %w", err)
+}
+
+func (p *surveyPrompter) Input(prompt, defaultValue string) (result string, err error) {
 	q := &survey.Input{
-		Message: opts.Message,
-		Default: opts.Default,
-		Help:    opts.Help,
+		Message: prompt,
+		Default: defaultValue,
 	}
 
-	ao := toAskOpts(opts.Validators)
-	ao = append(ao, survey.WithStdio(p.stdin, p.stdout, p.stderr))
+	err = p.ask(q, &result)
 
-	err = wrapSurveyError(survey.AskOne(q, &result, ao...))
+	return
+}
+
+func (p *surveyPrompter) InputHostname() (result string, err error) {
+	q := &survey.Input{
+		Message: "GHE hostname:",
+	}
+
+	err = p.ask(q, &result, survey.WithValidator(func(v interface{}) error {
+		return ghinstance.HostnameValidator(v.(string))
+	}))
 
 	return
 }

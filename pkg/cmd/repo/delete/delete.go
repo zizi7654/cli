@@ -91,19 +91,13 @@ func deleteRun(opts *DeleteOptions) error {
 	fullName := ghrepo.FullName(toDelete)
 
 	if !opts.Confirmed {
-		_, err := opts.Prompter.Input(cmdutil.PromptOpts{
-			Message: fmt.Sprintf("Type %s to confirm deletion:", fullName),
-			Validators: []cmdutil.Validator{
-				func(val string) error {
-					if !strings.EqualFold(val, fullName) {
-						return fmt.Errorf("You entered %s", val)
-					}
-					return nil
-				},
-			},
-		})
+		result, err := opts.Prompter.Input(
+			fmt.Sprintf("Type %s to confirm deletion:", fullName), "")
 		if err != nil {
 			return err
+		}
+		if !strings.EqualFold(result, fullName) {
+			return fmt.Errorf("You entered %s", result)
 		}
 	}
 

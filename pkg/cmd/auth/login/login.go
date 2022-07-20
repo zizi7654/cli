@@ -201,12 +201,7 @@ func promptForHostname(opts *LoginOptions) (string, error) {
 
 	hostname := ghinstance.Default()
 	if isEnterprise {
-		hostname, err = opts.Prompter.Input(cmdutil.PromptOpts{
-			Message: "GHE hostname:",
-			Validators: []cmdutil.Validator{
-				ghinstance.HostnameValidator,
-			},
-		})
+		hostname, err = opts.Prompter.InputHostname()
 	}
 
 	return hostname, err
