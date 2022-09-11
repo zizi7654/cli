@@ -163,7 +163,7 @@ func mainRun() exitCode {
 	}
 
 	// provide completions for aliases and extensions
-	rootCmd.ValidArgsFunction = func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	rootCmd.ValidArgsFunction = func(_ *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		var results []string
 		aliases := cfg.Aliases()
 		for aliasName, aliasValue := range aliases.All() {
@@ -199,7 +199,7 @@ func mainRun() exitCode {
 	}
 
 	authError := errors.New("authError")
-	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, args []string) error {
+	rootCmd.PersistentPreRunE = func(cmd *cobra.Command, _ []string) error {
 		// require that the user is authenticated before running most commands
 		if cmdutil.IsAuthCheckEnabled(cmd) && !cmdutil.CheckAuth(cfg) {
 			fmt.Fprint(stderr, authHelp())

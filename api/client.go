@@ -248,9 +248,9 @@ func clientOptions(hostname string, transport http.RoundTripper) ghAPI.ClientOpt
 	// AuthToken, and Headers are being handled by transport,
 	// so let go-gh know that it does not need to resolve them.
 	opts := ghAPI.ClientOptions{
-		AuthToken: "none",
+		AuthToken: "marwan",
 		Headers: map[string]string{
-			authorization: "",
+			authorization: "token marwan",
 		},
 		Host:               hostname,
 		SkipDefaultHeaders: true,
