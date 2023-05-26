@@ -64,15 +64,15 @@ sudo zypper update gh
 ## Manual installation
 
 * [Download release binaries][releases page] that match your platform; or
-* [Build from source](./source.md).
 
-## Unofficial, community-supported methods
+
+
 
 The GitHub CLI team does not maintain the following packages or repositories and thus we are unable to provide support for those installation methods.
 
-### Snap (do not use)
 
-There are [so many issues with Snap](https://github.com/casperdcl/cli/issues/7) as a runtime mechanism for apps like GitHub CLI that our team suggests _never installing gh as a snap_.
+
+
 
 ### Arch Linux
 
@@ -84,7 +84,7 @@ sudo pacman -S github-cli
 
 Alternatively, use the [unofficial AUR package][arch linux aur] to build GitHub CLI from source.
 
-### Android
+
 
 Android 7+ users can install via [Termux](https://wiki.termux.com/wiki/Main_Page):
 
@@ -129,9 +129,9 @@ ego sync
 emerge -u github-cli
 ```
 
-### Gentoo
 
-Gentoo Linux users can install from the [main portage tree](https://packages.gentoo.org/packages/dev-util/github-cli):
+
+
 
 ``` bash
 emerge -av github-cli
@@ -144,7 +144,7 @@ emerge --sync
 emerge -u github-cli
 ```
 
-### Kiss Linux
+
 
 Kiss Linux users can install from the [community repos](https://github.com/kisslinux/community):
 
@@ -152,21 +152,21 @@ Kiss Linux users can install from the [community repos](https://github.com/kissl
 kiss b github-cli && kiss i github-cli
 ```
 
-### Nix/NixOS
 
-Nix/NixOS users can install from [nixpkgs](https://search.nixos.org/packages?show=gitAndTools.gh&query=gh&from=0&size=30&sort=relevance&channel=20.03#disabled):
+
+
 
 ```bash
 nix-env -iA nixos.gitAndTools.gh
 ```
 
-### openSUSE Tumbleweed
 
-openSUSE Tumbleweed users can install from the [official distribution repo](https://software.opensuse.org/package/gh):
+
+
 ```bash
 sudo zypper in gh
 ```
 
 [releases page]: https://github.com/cli/cli/releases/latest
 [arch linux repo]: https://www.archlinux.org/packages/community/x86_64/github-cli
-[arch linux aur]: https://aur.archlinux.org/packages/github-cli-git
+
