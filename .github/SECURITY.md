@@ -4,11 +4,11 @@ If you believe you have found a security vulnerability in GitHub CLI, you can re
 
 * Report it to this repository directly using [private vulnerability reporting][]. Such reports are not eligible for a bounty reward.
 
-* Submit the report through [HackerOne][] to be eligible for a bounty reward.
 
-**Please do not report security vulnerabilities through public GitHub issues, discussions, or pull requests.**
+
+
 
 Thanks for helping make GitHub safe for everyone.
 
   [private vulnerability reporting]: https://github.com/cli/cli/security/advisories
-  [HackerOne]: https://hackerone.com/github
+  
